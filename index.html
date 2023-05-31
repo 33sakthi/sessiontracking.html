@@ -1,0 +1,136 @@
+<!-- index.php -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Session Tracking Example</title>
+</head>
+<body>
+    <h1>Welcome to the Session Tracking Example!</h1>
+
+    <?php
+    session_start();
+    if (isset($_SESSION['username'])) {
+        echo "<p>Welcome, " . $_SESSION['username'] . "!</p>";
+    }
+    ?>
+
+    <p><a href="login.php">Login</a> | <a href="register.php">Register</a></p>
+</body>
+</html>
+
+
+<!-- login.php -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+
+    <?php
+    session_start();
+    if (isset($_SESSION['username'])) {
+        header("Location: dashboard.php");
+        exit();
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        if ($username === 'admin' && $password === 'password') {
+            $_SESSION['username'] = $username;
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            $error = "Invalid username or password.";
+        }
+    }
+    ?>
+
+    <?php
+    if (isset($error)) {
+        echo "<p>$error</p>";
+    }
+    ?>
+
+    <form method="POST" action="">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <input type="submit" value="Login">
+    </form>
+</body>
+</html>
+
+
+<!-- register.php -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registration</title>
+</head>
+<body>
+    <h1>Registration</h1>
+
+    <?php
+    session_start();
+    if (isset($_SESSION['username'])) {
+        header("Location: dashboard.php");
+        exit();
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+
+        // Assuming successful registration
+        $success = true;
+    }
+    ?>
+
+    <?php
+    if (isset($success)) {
+        echo "<p>Registration successful. <a href='login.php'>Login</a></p>";
+    }
+    ?>
+
+    <form method="POST" action="">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+
+        <input type="submit" value="Register">
+    </form>
+</body>
+</html>
+
+
+<!-- dashboard.php -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1>Welcome to Your Dashboard</h1>
+
+    <?php
+    session_start();
+    if (!isset($_SESSION['username'])) {
+        header("Location: login.php");
+        exit();
+    }
+    ?>
+
+    <p>Logged in as: <?php echo $_SESSION['username']; ?></p>
+
+    <p>Put your protected content here.</p>
+</body>
+</html>
